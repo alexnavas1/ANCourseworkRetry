@@ -1,0 +1,17 @@
+body{
+    font-family: retrofont, sans-serif;
+    background-color: black;
+    color: white;
+    font-size:2vw;
+}
+
+.buttons{
+    font-family: retrofont, sans-serif;
+    font-size: 2vw;
+    color: black;
+    background-color: white;
+}
+
+.minortext{
+    font-size: 1vw;
+}
