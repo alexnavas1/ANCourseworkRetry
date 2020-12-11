@@ -1,8 +1,8 @@
-function postUserLogin() {
+function UsersLogin() {
     //debugger;
     console.log("Invoked UsersLogin() ");
-    let url = "/Users/login";
-    var formData = new FormData(document.getElementById('LoginForm'));
+    let url = "/users/login";
+    let formData = new FormData(document.getElementById("LoginForm"));
 
     fetch(url, {
         method: "POST",

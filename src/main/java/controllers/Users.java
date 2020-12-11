@@ -60,9 +60,9 @@ public class Users{
     }
 
     @POST
-    @Path("trylogin")
-    public String UserTryLogin(@FormDataParam("Username") String Username, @FormDataParam("Password") String Password) {
-        System.out.println("Invoked users/trylogin on path trylogin");
+    @Path("login")
+    public String UsersLogin(@FormDataParam("Username") String Username, @FormDataParam("Password") String Password) {
+        System.out.println("Invoked loginUser() on path users/login");
         try {
             PreparedStatement ps1 = Main.db.prepareStatement("SELECT Password FROM Users WHERE Username = ?");
             ps1.setString(1, Username);
@@ -76,7 +76,7 @@ public class Users{
                     ps2.setString(2, Username);
                     ps2.executeUpdate();
                     JSONObject userDetails = new JSONObject();
-                    userDetails.put("UserName", Username);
+                    userDetails.put("Username", Username);
                     userDetails.put("Token", Token);
                     return userDetails.toString();
                 } else {
@@ -86,10 +86,26 @@ public class Users{
                 return "{\"Error\": \"Incorrect username.\"}";
             }
         } catch (Exception exception) {
-            System.out.println("Database error during /users/trylogin: " + exception.getMessage());
+            System.out.println("Database error during /users/login: " + exception.getMessage());
             return "{\"Error\": \"Server side error!\"}";
         }
     }
+
+    //returns the userID with the token value
+    public static int validToken(String Token) {
+        System.out.println("Invoked User.validateToken(), Token value " + Token);
+        try {
+            PreparedStatement statement = Main.db.prepareStatement("SELECT UserID FROM Users WHERE Token = ?");
+            statement.setString(1, Token);
+            ResultSet resultSet = statement.executeQuery();
+            System.out.println("userID is " + resultSet.getInt("UserID"));
+            return resultSet.getInt("UserID");  //Retrieve by column name  (should really test we only get one result back!)
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return -1;  //rogue value indicating error
+        }
+    }
+
 }
 
 
