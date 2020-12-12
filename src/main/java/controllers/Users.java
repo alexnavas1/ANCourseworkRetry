@@ -42,7 +42,7 @@ public class Users{
 
     @POST
     @Path("create")
-    public String UserCreate(@FormDataParam("Username") String Username, @FormDataParam("Password") String Password, @FormDataParam("FirstName") String FirstName, @FormDataParam("LastName") String LastName, @FormDataParam("AdminKey") String AdminKey) {
+    public String UsersCreate(@FormDataParam("Username") String Username, @FormDataParam("Password") String Password, @FormDataParam("FirstName") String FirstName, @FormDataParam("LastName") String LastName, @FormDataParam("AdminKey") String AdminKey) {
         try {
             System.out.println("Invoked Users.UserCreate Username=" + Username);
             PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Users (Username, Password, FirstName, LastName, AdminKey) VALUES (?, ?, ?, ?, ?)");

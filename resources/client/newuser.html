@@ -4,21 +4,23 @@
     <meta charset="UTF-8">
     <title>Account Creation</title>
     <link rel="stylesheet" href="css/style.css" type="text/css">
+    <script src="/client/js/users.js"></script>
 </head>
 <body>
-<h1>New Account</h1>
-<div>
-    <input class="buttons" type="text" id="usernameinput" name="usernameinput" placeholder="Username">
-    <input class="buttons" type="text" id="passwordinput" name="passwordinput" placeholder="Password">
-    <br>
-    <input class="buttons" type="text" id="firstnameinput" name="firstnameinput" placeholder="First Name">
-    <input class="buttons" type="text" id="lastnameinput" name="lastnameinput" placeholder="Last name">
-    <br>
-    <input class="buttons" type="text" id="admininput" name="admininput" placeholder="Admin Key">
-    <p class="minortext">Note: Passwords must be a minimum of 8 characters</p>
-    <input class="buttons" type="submit" id="createaccountbutton" name="createaccountbutton" value="create">
+    <h1>New Account</h1>
+    <form id="createform">
+        <input class="buttons" type="text" id="Username" name="Username" placeholder="Username">
+        <input class="buttons" type="password" id="Password" name="Password" placeholder="Password">
+        <br>
+        <input class="buttons" type="text" id="FirstName" name="FirstName" placeholder="FirstName">
+        <input class="buttons" type="text" id="LastName" name="LastName" placeholder="LastName">
+        <br>
+        <input class="buttons" type="text" id="AdminKey" name="AdminKey" placeholder="Admin Key">
 
-</div>
+    </form>
+
+    <p class="minortext">Note: Passwords must be a minimum of 8 characters</p>
+    <input class="buttons" type="submit" id="createaccountbutton" name="createaccountbutton" onclick='UsersCreate();'>
 
 </body>
 </html>
