@@ -20,22 +20,4 @@ function UsersLogin() {
 });
 }
 
-function UsersCreate(){
-    console.log("Invoked UsersCreate()");
-    let url = "/Users/create";
-    let formData = new FormData(document.getElementById("createform"));
 
-    fetch(url, {
-        method: "POST",
-        body: formData,
-    }).then(response => {
-        return response.json();
-    }).then(response => {
-        if (response.hasOwnProperty("Error")){
-            alert(JSON.stringify(response));
-        } else {
-            window.open("login.html", "_self");
-            alert("Account successfully created");
-        }
-    })
-}
