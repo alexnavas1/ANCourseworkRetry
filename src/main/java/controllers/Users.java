@@ -61,33 +61,33 @@ public class Users{
 
     @POST
     @Path("login")
-    public String UsersLogin(@FormDataParam("Username") String Username, @FormDataParam("Password") String Password) {
+    public String UsersLogin(@FormDataParam("Username") String Username, @FormDataParam("Password") String Password) { //defines the variables to be handed to the API method which will be used throughout the process
         System.out.println("Invoked loginUser() on path users/login");
         try {
             PreparedStatement ps1 = Main.db.prepareStatement("SELECT Password FROM Users WHERE Username = ?");
             ps1.setString(1, Username);
-            ResultSet loginResults = ps1.executeQuery();
+            ResultSet loginResults = ps1.executeQuery(); //in this line and the 2 above, the database gets the password already in the database which matches the provided username, ready to be compared with the user's inputted password
             if (loginResults.next() == true) {
                 String correctPassword = loginResults.getString(1);
                 if (Password.equals(correctPassword)) {
-                    String Token = UUID.randomUUID().toString();
+                    String Token = UUID.randomUUID().toString(); //this line generates a token to be used as the cookies during the user's visit to the site
                     PreparedStatement ps2 = Main.db.prepareStatement("UPDATE Users SET Token = ? WHERE Username = ?");
                     ps2.setString(1, Token);
                     ps2.setString(2, Username);
-                    ps2.executeUpdate();
+                    ps2.executeUpdate(); //this line and the 3 above are about sending the user's cookies to the database, so that they are remembered for later
                     JSONObject userDetails = new JSONObject();
                     userDetails.put("Username", Username);
                     userDetails.put("Token", Token);
                     return userDetails.toString();
                 } else {
-                    return "{\"Error\": \"Incorrect password!\"}";
+                    return "{\"Error\": \"Incorrect password!\"}"; //this links to line 72 ( if (Password.equals(correctPassword)), and it means that if the provided password doesn't match the one in the database, the password is incorrect
                 }
             } else {
-                return "{\"Error\": \"Incorrect username.\"}";
+                return "{\"Error\": \"Incorrect username.\"}"; //this is the else statement linking to line 70 (if loginresults.next ==true), and it means that if a corresponding password isn't found then it must be because the username given is wrong
             }
         } catch (Exception exception) {
             System.out.println("Database error during /users/login: " + exception.getMessage());
-            return "{\"Error\": \"Server side error!\"}";
+            return "{\"Error\": \"Server side error!\"}"; //these last two lines define how to react if none of the above code runs successfully, giving a non-specific error message
         }
     }
 
