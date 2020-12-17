@@ -5,6 +5,8 @@
     <title>Adventure Game</title>
     <link rel="stylesheet" href="css/style.css" type="text/css">
     <script src="/client/js/game.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.js"></script>
+
     <style>
         body{
             background-image: url("https://i.ytimg.com/vi/Ic3ZdD5ko7k/maxresdefault.jpg");
@@ -14,11 +16,11 @@
         }
     </style>
 </head>
-<body>
+<body onload="getProgress()">
 <h1>Logo</h1>
 
-<div style="margin-left:55vw;float:left">
-    <p>swae</p>
+<div style="margin-left:5vw;float:left">
+    <p class="minortext">swae</p>
 </div>
 </body>
 </html>

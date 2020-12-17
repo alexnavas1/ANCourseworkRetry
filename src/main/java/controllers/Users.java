@@ -106,6 +106,32 @@ public class Users{
         }
     }
 
+    @GET
+    @Path("getProgress/{Token}")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getProgress(@PathParam("Token") String Token) {
+        System.out.println("Invoked Users.getProgress() with Token " + Token);
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("SELECT Health, Stamina, Score, ProgressID FROM Users WHERE Token = ?");
+            ps.setString(1, Token);
+            ResultSet results = ps.executeQuery();
+            JSONObject response = new JSONObject();
+            if (results.next()== true) {
+                response.put("Token", Token);
+                response.put("Health", results.getInt(1));
+                response.put("Stamina", results.getInt(2));
+                response.put("Score", results.getInt(3));
+                response.put("ProgressID", results.getInt(4));
+            }
+            return response.toString();
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"Error\": \"Unable to get item, please see server console for more info.\"}";
+        }
+    }
+
+
 }
 
 

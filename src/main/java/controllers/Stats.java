@@ -26,8 +26,8 @@ public class Stats{
             ResultSet results = ps.executeQuery();
             JSONObject response = new JSONObject();
             if (results.next()== true) {
-                response.put("UserID", results.getInt(2));
                 response.put("StatID", results.getInt(1));
+                response.put("UserID", results.getInt(2));
                 response.put("Health", results.getInt(3));
                 response.put("Stamina", results.getInt(4));
                 response.put("Score", results.getInt(5));
