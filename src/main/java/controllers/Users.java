@@ -61,6 +61,8 @@ public class Users{
 
     @POST
     @Path("login")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
     public String UsersLogin(@FormDataParam("Username") String Username, @FormDataParam("Password") String Password) { //defines the variables to be handed to the API method which will be used throughout the process
         System.out.println("Invoked loginUser() on path users/login");
         try {
@@ -77,7 +79,7 @@ public class Users{
                     ps2.executeUpdate(); //this line and the 3 above are about sending the user's cookies to the database, so that they are remembered for later
                     JSONObject userDetails = new JSONObject();
                     userDetails.put("Username", Username);
-                    userDetails.put("Token", Token);
+                    userDetails.put("Token", Token); // this includes the token to be used for the current user
                     return userDetails.toString();
                 } else {
                     return "{\"Error\": \"Incorrect password!\"}"; //this links to line 72 ( if (Password.equals(correctPassword)), and it means that if the provided password doesn't match the one in the database, the password is incorrect
@@ -106,25 +108,39 @@ public class Users{
         }
     }
 
-    @GET
-    @Path("getProgress/{Token}")
+    @POST
+    @Path("getProgress")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String getProgress(@PathParam("Token") String Token) {
+    public String getProgress(@CookieParam("Token") String Token) {
         System.out.println("Invoked Users.getProgress() with Token " + Token);
         try {
             PreparedStatement ps = Main.db.prepareStatement("SELECT Health, Stamina, Score, ProgressID FROM Users WHERE Token = ?");
             ps.setString(1, Token);
             ResultSet results = ps.executeQuery();
             JSONObject response = new JSONObject();
-            if (results.next()== true) {
-                response.put("Token", Token);
+            if (results.next()) {
                 response.put("Health", results.getInt(1));
                 response.put("Stamina", results.getInt(2));
                 response.put("Score", results.getInt(3));
                 response.put("ProgressID", results.getInt(4));
             }
             return response.toString();
+
+            /* alternative code for multiple items being read from a table
+                JSONArray jsa = new JSONArray();
+                JSONObject jso = new JSONObject();
+                while(results.next()){
+                    response.put("Health", results.getInt(1));
+                    response.put("Stamina", results.getInt(2));
+                    response.put("Score", results.getInt(3));
+                    response.put("ProgressID", results.getInt(4));
+                    jsa.add(response);
+                }
+                jso.put("stats", jsa);
+                return jso.toString();
+             */
+
         } catch (Exception exception) {
             System.out.println("Database error: " + exception.getMessage());
             return "{\"Error\": \"Unable to get item, please see server console for more info.\"}";

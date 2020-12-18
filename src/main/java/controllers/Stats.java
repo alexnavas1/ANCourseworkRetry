@@ -15,25 +15,39 @@ import java.sql.ResultSet;
 
 public class Stats{
     @GET
-    @Path("get/{UserID}")
+    @Path("get")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String GetStats(@PathParam("UserID") Integer UserID) {
-        System.out.println("Invoked Stats.Statsget() with UserID " + UserID);
+    public String GetStats(@CookieParam("Token") String token) {
+        //System.out.println("Invoked Stats.Statsget() with UserID " + UserID);
         try {
-            PreparedStatement ps = Main.db.prepareStatement("SELECT StatID, UserID, Health, Stamina, Score, ProgressID FROM Stats WHERE UserID = ?");
-            ps.setInt(1, UserID);
-            ResultSet results = ps.executeQuery();
-            JSONObject response = new JSONObject();
-            if (results.next()== true) {
-                response.put("StatID", results.getInt(1));
-                response.put("UserID", results.getInt(2));
-                response.put("Health", results.getInt(3));
-                response.put("Stamina", results.getInt(4));
-                response.put("Score", results.getInt(5));
-                response.put("ProgressID", results.getInt(6));
+            PreparedStatement id = Main.db.prepareStatement("SELECT UserID FROM Users WHERE Token = ?");
+            id.setString(1,token);
+            ResultSet idRes = id.executeQuery();
+            JSONArray stats = new JSONArray();
+            if(idRes.next()){
+                int UserID = idRes.getInt(1);
+                PreparedStatement ps = Main.db.prepareStatement("SELECT StatID, UserID, Health, Stamina, Score, ProgressID FROM Stats WHERE UserID = ?");
+                ps.setInt(1, UserID);
+                ResultSet results = ps.executeQuery();
+                JSONObject response = new JSONObject();
+                while (results.next()) {
+                    response.put("StatID", results.getInt(1));
+                    response.put("UserID", results.getInt(2));
+                    response.put("Health", results.getInt(3));
+                    response.put("Stamina", results.getInt(4));
+                    response.put("Score", results.getInt(5));
+                    response.put("ProgressID", results.getInt(6));
+                    stats.add(response);
+                }
+                JSONObject fin = new JSONObject();
+                System.out.println(stats);
+                fin.put("stats",stats);
+                return fin.toString();
+            }else{
+                return "{\"Error\": \"No current login session found\"}";
             }
-            return response.toString();
+
         } catch (Exception exception) {
             System.out.println("Database error: " + exception.getMessage());
             return "{\"Error\": \"Unable to get item, please see server console for more info.\"}";
